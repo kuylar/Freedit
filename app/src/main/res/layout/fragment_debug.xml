@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:padding="16dp"
+	tools:context=".DebugFragment" >
+
+	<Button
+		android:id="@+id/button_debug_login"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Launch LoginActivity" />
+
+	<Button
+		android:id="@+id/button_dump_creds"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Dump saved credentials" />
+
+	<Button
+		android:id="@+id/button_debug_current_user"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Get info from logged in user" />
+
+	<Button
+		android:id="@+id/button_get_auth_header"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Extract authentication header" />
+</LinearLayout>

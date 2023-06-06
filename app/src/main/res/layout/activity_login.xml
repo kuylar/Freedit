@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:fitsSystemWindows="true"
+	android:gravity="center"
+	android:orientation="vertical"
+	android:padding="8dp"
+	tools:context=".LoginActivity">
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/input_login_username"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/login_username">
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:autofillHints="username" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/input_login_password"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/login_password"
+		app:endIconMode="password_toggle"
+		app:errorEnabled="true">
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:autofillHints="password"
+			android:inputType="textPassword" />
+
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/button_login_submit"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/login_submit" />
+
+</LinearLayout>
