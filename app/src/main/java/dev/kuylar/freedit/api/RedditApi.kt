@@ -1,17 +1,21 @@
 package dev.kuylar.freedit.api
 
+import android.app.Activity
+import android.content.Context
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import dev.kuylar.freedit.api.models.ApiResponse
 import dev.kuylar.freedit.api.models.JsonWrappedResponse
 import dev.kuylar.freedit.api.models.LoginResponse
+import dev.kuylar.freedit.api.models.RedditCSRFInfo
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.util.regex.Pattern
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class RedditApi(private val cookie: String? = null, private val modhash: String? = null) {
@@ -25,17 +29,30 @@ class RedditApi(private val cookie: String? = null, private val modhash: String?
 			url("https://gql.reddit.com")
 			post(gson.toJson(body).toRequestBody("application/json".toMediaType()))
 
+			val auth = Static.getAuthorizationHeader(
+				hashMapOf(
+					Pair(
+						"User-Agent",
+						Static.ua
+					),
+					Pair(
+						"cookie",
+						"reddit_session=$cookie;"
+					)
+				)
+			)
+
 			header(
 				"User-Agent",
-				"Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/112.0"
+				Static.ua
 			)
 			header(
 				"cookie",
-				"reddit_session=$cookie;"
+				"reddit_session=${auth.tracker};"
 			)
 			header(
 				"Authorization",
-				"Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IlNIQTI1NjpzS3dsMnlsV0VtMjVmcXhwTU40cWY4MXE2OWFFdWFyMnpLMUdhVGxjdWNZIiwidHlwIjoiSldUIn0.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNjg2MDkxMzI4Ljk0MDcxMiwiaWF0IjoxNjg2MDA0OTI4Ljk0MDcxMSwianRpIjoiQTB2aHJXZU1rbGtJNkwtMVAxaXRQZXNtZGFZUFBnIiwiY2lkIjoiOXRMb0Ywc29wNVJKZ0EiLCJsaWQiOiJ0Ml9kdXRoMTBxaiIsImFpZCI6InQyX2R1dGgxMHFqIiwibGNhIjoxNjI4NzAwNDQ4MjI2LCJzY3AiOiJlSnhra2RHTzlDQUloZC1GYTVfZ2Y1VV9tNDFWT2tOV3BRSHNaTjUtWXl1ZEpudlZBLWRUNGZRX1lJMVVJTUJHQkFGaVN0eWJRWUFrbURPWlFnRE1ORHByaVNRUTRFbHFMRzhJUUJtYmtRMVphTWNhVzN3Z0JLaWNFN2VWSHBjMm9hVWJpNTRkdjZweUxqeXBPVWZsM05qbUxXeFA5RE1icTAycFdOWlRtY1IxcFhRV0xfb1pPOVMzOXVVel9TYTBSOE9LcXZHQm95TVk4X0haV01aaUd2ZnhucHIwWkYwd3E3M0xRV3BmNnJHNzlrV1QwREs0X1J4dnZEYVRHWEplbXA3Ul90MzFTLWpBUGNfTDlOcUJHYXY3WHJydFdidF8xUTVVemlqUldKejROQnk1Y3ZrZXZ3VGJOZWxmNDNaa0xMNFpjZE1iZm1zNk9uSng0dENuOGZVYkFBRF9fMThTMkZFIiwicmNpZCI6IkJPeDVuWU1odzd5YWFKWmkybGhSZ2xxT25BU3VXUmt1UUJndEg4YmRhMzQiLCJmbG8iOjJ9.mt-kT657CFxKiq_PEFJyqKewiDCRPLwXzbJPVqe4tSPYIbm_xqbC7iF_CtbqmqbGrbAr2xZ02epgUjFhaqhDElJfPLBQV8T2MLNfI3ZJUfy3sTt2Y_EadykaYUlbCDzHlKCau9fBAznRhPZa-xCQ5M_a25oIVEvO_cO44RbJTm350hjamp_ykxQj_OH3bKc0J2bm3YDNvkxC6ld5FU2u4gZSsyAcABBNrYXe0vg_2QIap3IAYwpBPK7-JyIEeYfUqwekN0vTnoM7dDbuDgxbL0P7kCkzXgyFWAFBS_tFd3-SjKE7ijfLNcZvMBSKE4VPM00GzqjvHoja8_bGTpFvzA"
+				"Bearer ${auth.authHeader}"
 			)
 		}.build()
 		client.newCall(request).execute().use { response ->
@@ -48,6 +65,9 @@ class RedditApi(private val cookie: String? = null, private val modhash: String?
 	}
 
 	object Static {
+		private var csrfInfo: RedditCSRFInfo? = null
+		val ua = "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/112.0"
+
 		fun login(
 			username: String,
 			password: String
@@ -107,7 +127,13 @@ class RedditApi(private val cookie: String? = null, private val modhash: String?
 			}
 		}
 
-		fun getAuthorizationHeader(headers: HashMap<String, String>): String {
+		fun getAuthorizationHeader(
+			headers: HashMap<String, String>,
+			overrideSaved: Boolean = false
+		): RedditCSRFInfo {
+			if (csrfInfo != null && !csrfInfo!!.expired() && !overrideSaved) {
+				return csrfInfo!!
+			}
 			val client = OkHttpClient.Builder().build()
 			val gson = GsonBuilder().create()
 			val request: Request = Request.Builder().apply {
@@ -122,12 +148,38 @@ class RedditApi(private val cookie: String? = null, private val modhash: String?
 				val r = Regex("<script id=\"data\">window\\.___r = (.+?);</script>")
 				val find = r.find(html)
 				val data = gson.fromJson(find!!.groups[1]!!.value, JsonObject::class.java)
-				return data
+				val session = data
 					.getAsJsonObject("user")
 					.getAsJsonObject("session")
-					.getAsJsonPrimitive("accessToken")
-					.asString
+				return RedditCSRFInfo(
+					session
+						.getAsJsonPrimitive("accessToken")
+						.asString,
+					SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).parse(
+						session
+							.getAsJsonPrimitive("expires")
+							.asString
+					)!!,
+					data.getAsJsonObject("user")
+						.getAsJsonPrimitive("sessionTracker")
+						.asString,
+				)
 			}
+		}
+
+		fun instance(context: Context): RedditApi {
+			val sp = context.getSharedPreferences("main", Activity.MODE_PRIVATE)!!
+			val cookie = sp.getString("cookie", null)
+			val modhash = sp.getString("modhash", null)
+//			thread {
+//				getAuthorizationHeader(
+//					hashMapOf(
+//						Pair("User-Agent", ua),
+//						Pair("Cookie", "reddit_session=$cookie;")
+//					), overrideSaved = true
+//				)
+//			}
+			return RedditApi(cookie, modhash)
 		}
 	}
 }

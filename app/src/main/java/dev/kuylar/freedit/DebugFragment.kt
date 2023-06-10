@@ -50,8 +50,7 @@ class DebugFragment : Fragment() {
 
 		binding.buttonDebugCurrentUser.setOnClickListener {
 			binding.buttonDebugCurrentUser.isEnabled = false
-			val sp = activity?.getSharedPreferences("main", Activity.MODE_PRIVATE)!!
-			val api = RedditApi(sp.getString("cookie", null), sp.getString("modhash", null))
+			val api = RedditApi.Static.instance(requireActivity())
 			thread {
 				val home = api.gqlRequest(
 					"d45d9e249839", hashMapOf(
@@ -73,13 +72,20 @@ class DebugFragment : Fragment() {
 				)
 				activity?.runOnUiThread {
 					binding.buttonDebugCurrentUser.isEnabled = true
-					val name =
-						home.data!!.getAsJsonObject("identity")
+					val identity =
+						home.data!!.get("identity")
+					if (identity.isJsonNull) {
+						Toast.makeText(
+							activity, "not logged in", Toast.LENGTH_LONG
+						).show()
+					} else {
+						val name = identity.asJsonObject
 							.getAsJsonObject("redditor")
 							.getAsJsonPrimitive("name").asString
-					Toast.makeText(
-						activity, "name: $name", Toast.LENGTH_LONG
-					).show()
+						Toast.makeText(
+							activity, "name: $name", Toast.LENGTH_LONG
+						).show()
+					}
 				}
 			}
 		}
