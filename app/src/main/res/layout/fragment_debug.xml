@@ -5,7 +5,7 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical"
 	android:padding="16dp"
-	tools:context=".DebugFragment" >
+	tools:context=".DebugFragment">
 
 	<Button
 		android:id="@+id/button_debug_login"
@@ -30,4 +30,16 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="Extract authentication header" />
+
+	<Button
+		android:id="@+id/button_get_frontpage_subreddits"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Get popular subreddits" />
+
+	<Button
+		android:id="@+id/button_get_frontpage_posts"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Get 5 frontpage posts" />
 </LinearLayout>

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import dev.kuylar.freedit.api.RedditApi
+import dev.kuylar.freedit.api.enums.RedditSort
 import dev.kuylar.freedit.databinding.FragmentDebugBinding
 import kotlin.concurrent.thread
 
@@ -52,38 +53,18 @@ class DebugFragment : Fragment() {
 			binding.buttonDebugCurrentUser.isEnabled = false
 			val api = RedditApi.Static.instance(requireActivity())
 			thread {
-				val home = api.gqlRequest(
-					"d45d9e249839", hashMapOf(
-						Pair("adContext", null),
-						Pair("feedRankingContext", null),
-						Pair("forceGeopopular", true),
-						Pair("includeCommunityDUs", false),
-						Pair("includeInterestTopics", false),
-						Pair("includeFeaturedAnnouncements", false),
-						Pair("includeLiveEvents", false),
-						Pair("includeIdentity", true),
-						Pair("includePostRecommendations", false),
-						Pair("includeFreeMarketplaceElement", false),
-						Pair("includeSubredditQuestions", false),
-						Pair("includeExposureEvents", false),
-						Pair("recentPostIds", emptyList<String>()),
-						Pair("sort", "HOT")
-					)
-				)
+				val home = api.getFrontpage(RedditSort.HOT)
 				activity?.runOnUiThread {
 					binding.buttonDebugCurrentUser.isEnabled = true
 					val identity =
-						home.data!!.get("identity")
-					if (identity.isJsonNull) {
+						home.data!!.identity
+					if (identity == null) {
 						Toast.makeText(
 							activity, "not logged in", Toast.LENGTH_LONG
 						).show()
 					} else {
-						val name = identity.asJsonObject
-							.getAsJsonObject("redditor")
-							.getAsJsonPrimitive("name").asString
 						Toast.makeText(
-							activity, "name: $name", Toast.LENGTH_LONG
+							activity, "name: ${identity.redditor.name}", Toast.LENGTH_LONG
 						).show()
 					}
 				}
@@ -106,6 +87,42 @@ class DebugFragment : Fragment() {
 					Toast.makeText(
 						activity, "Authorization: $h", Toast.LENGTH_LONG
 					).show()
+				}
+			}
+		}
+
+		binding.buttonGetFrontpageSubreddits.setOnClickListener {
+			binding.buttonGetFrontpageSubreddits.isEnabled = false
+			thread {
+				val api = RedditApi.Static.instance(requireActivity())
+				val frontpage = api.getFrontpage(RedditSort.HOT)
+				activity?.runOnUiThread {
+					binding.buttonGetFrontpageSubreddits.isEnabled = true
+					frontpage.data!!.trendingSubreddits.forEach {
+						Toast.makeText(
+							activity,
+							it.name,
+							Toast.LENGTH_LONG
+						).show()
+					}
+				}
+			}
+		}
+
+		binding.buttonGetFrontpagePosts.setOnClickListener {
+			binding.buttonGetFrontpagePosts.isEnabled = false
+			thread {
+				val api = RedditApi.Static.instance(requireActivity())
+				val frontpage = api.getFrontpage(RedditSort.HOT)
+				activity?.runOnUiThread {
+					binding.buttonGetFrontpagePosts.isEnabled = true
+					frontpage.data!!.home.elements.edges.take(5).forEach {
+						Toast.makeText(
+							activity,
+							"u/${it.node.authorInfo.name} on r/${it.node.subreddit?.name ?: ("Sponsored? " + it.node.isAd())}\n${it.node.title}",
+							Toast.LENGTH_LONG
+						).show()
+					}
 				}
 			}
 		}
