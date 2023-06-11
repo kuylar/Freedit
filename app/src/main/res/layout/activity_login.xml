@@ -8,7 +8,7 @@
 	android:gravity="center"
 	android:orientation="vertical"
 	android:padding="8dp"
-	tools:context=".LoginActivity">
+	tools:context=".ui.activity.LoginActivity">
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/input_login_username"

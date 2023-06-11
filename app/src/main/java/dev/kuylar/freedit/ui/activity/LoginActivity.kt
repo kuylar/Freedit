@@ -1,10 +1,12 @@
-package dev.kuylar.freedit
+package dev.kuylar.freedit.ui.activity
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.core.view.WindowCompat
+import dev.kuylar.freedit.ui.fragment.OtpFragment
+import dev.kuylar.freedit.R
 import dev.kuylar.freedit.api.RedditApi.*
 import dev.kuylar.freedit.databinding.ActivityLoginBinding
 import kotlin.concurrent.thread

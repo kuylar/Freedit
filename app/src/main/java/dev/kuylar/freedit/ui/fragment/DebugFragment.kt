@@ -1,4 +1,4 @@
-package dev.kuylar.freedit
+package dev.kuylar.freedit.ui.fragment
 
 import android.app.Activity
 import android.content.Intent
@@ -11,6 +11,7 @@ import android.widget.Toast
 import dev.kuylar.freedit.api.RedditApi
 import dev.kuylar.freedit.api.enums.RedditSort
 import dev.kuylar.freedit.databinding.FragmentDebugBinding
+import dev.kuylar.freedit.ui.activity.LoginActivity
 import kotlin.concurrent.thread
 
 class DebugFragment : Fragment() {

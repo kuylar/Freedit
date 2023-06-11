@@ -1,4 +1,4 @@
-package dev.kuylar.freedit
+package dev.kuylar.freedit.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dev.kuylar.freedit.R
 import dev.kuylar.freedit.api.RedditApi
 import dev.kuylar.freedit.databinding.FragmentOtpBinding
 import kotlin.concurrent.thread
