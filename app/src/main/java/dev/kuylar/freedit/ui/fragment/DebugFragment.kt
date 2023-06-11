@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
+import dev.kuylar.freedit.R
 import dev.kuylar.freedit.api.RedditApi
 import dev.kuylar.freedit.api.enums.RedditSort
 import dev.kuylar.freedit.databinding.FragmentDebugBinding
@@ -126,6 +128,15 @@ class DebugFragment : Fragment() {
 					}
 				}
 			}
+		}
+
+		binding.buttonNavigateFrontpage.setOnClickListener {
+			Toast.makeText(
+				activity,
+				"Please note that this is not the final design. It will change in the future to look better",
+				Toast.LENGTH_LONG
+			).show()
+			findNavController().navigate(R.id.navigation_frontpage)
 		}
 	}
 }

@@ -62,4 +62,8 @@
 	<string name="otp_submit">Log in</string>
 	<string name="error_incorrect_credentials">Incorrect username or password</string>
 	<string name="error_otp_invalid">The verification code you entered is not valid</string>
+	<string name="post_title_template">u/%s on r/%s • %s</string>
+	<string name="share">Share</string>
+	<string name="save">Save</string>
+	<string name="comments">Comments</string>
 </resources>

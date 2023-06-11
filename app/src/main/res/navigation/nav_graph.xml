@@ -9,4 +9,9 @@
 		android:name="dev.kuylar.freedit.ui.fragment.DebugFragment"
 		android:label="fragment_debug"
 		tools:layout="@layout/fragment_debug" />
+	<fragment
+		android:id="@+id/navigation_frontpage"
+		android:name="dev.kuylar.freedit.ui.fragment.FrontpageFragment"
+		android:label="fragment_frontpage"
+		tools:layout="@layout/fragment_frontpage" />
 </navigation>

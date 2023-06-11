@@ -42,4 +42,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="Get 5 frontpage posts" />
+
+	<Button
+		android:id="@+id/button_navigate_frontpage"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="Open frontpage" />
 </LinearLayout>

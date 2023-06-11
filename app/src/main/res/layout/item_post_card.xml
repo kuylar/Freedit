@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	style="?attr/materialCardViewFilledStyle"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_margin="8dp"
+	android:checkable="true"
+	android:clickable="true"
+	android:focusable="true">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="16dp">
+
+			<TextView
+				android:layout_width="match_parent"
+				android:id="@+id/post_info"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="8dp"
+				android:text="@string/post_title_template"
+				android:textAppearance="?attr/textAppearanceBodyMedium"
+				android:textColor="?android:attr/textColorSecondary" />
+
+			<TextView
+				android:id="@+id/post_title"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textAppearance="?attr/textAppearanceTitleMedium"
+				tools:text="Post Title" />
+
+		</LinearLayout>
+
+		<ImageView
+			android:id="@+id/post_image"
+			android:layout_width="match_parent"
+			android:layout_height="194dp"
+			android:scaleType="fitCenter"
+			tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+		<HorizontalScrollView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingVertical="8dp"
+			android:scrollbars="none">
+
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:paddingHorizontal="16dp">
+
+				<com.google.android.material.button.MaterialButtonToggleGroup
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginRight="8dp">
+
+					<com.google.android.material.button.MaterialButton
+						android:id="@+id/button_upvote"
+						style="@style/Widget.Material3.Button.ElevatedButton"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="8dp"
+						app:icon="@android:drawable/arrow_up_float"
+						tools:text="123" />
+
+					<com.google.android.material.button.MaterialButton
+						style="@style/Widget.Material3.Button.ElevatedButton"
+						android:layout_width="64dp"
+						android:layout_height="wrap_content"
+						app:icon="@android:drawable/arrow_down_float" />
+
+				</com.google.android.material.button.MaterialButtonToggleGroup>
+
+				<com.google.android.material.button.MaterialButton
+					style="@style/Widget.Material3.Button.ElevatedButton"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginHorizontal="8dp"
+					android:layout_marginEnd="8dp"
+					android:text="@string/comments" />
+
+				<com.google.android.material.button.MaterialButton
+					style="@style/Widget.Material3.Button.ElevatedButton"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginHorizontal="8dp"
+					android:text="@string/save" />
+
+				<com.google.android.material.button.MaterialButton
+					style="@style/Widget.Material3.Button.ElevatedButton"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginRight="8dp"
+					android:text="@string/share" />
+			</LinearLayout>
+		</HorizontalScrollView>
+	</LinearLayout>
+</com.google.android.material.card.MaterialCardView>
